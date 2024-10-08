@@ -1,0 +1,24 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteOption
+metadata:
+  name: portal
+  namespace: default
+spec:
+  options:
+    cors:
+      allowOrigin:
+        - http://localhost:4000
+        - http://127.0.0.1:4000
+        - http://portal.example.com:4000
+        - http://devportal.example.com
+      allowHeaders:
+        - "Content-Type"
+        - "Authorization"
+        - "Access-Control-Allow-Origin"
+      allowMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: true

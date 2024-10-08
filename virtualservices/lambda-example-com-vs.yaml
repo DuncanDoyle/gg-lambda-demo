@@ -1,0 +1,68 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: api-example-com
+  namespace: gloo-system
+  labels:
+    app: quarkus-lambda-ddoyle
+spec:
+  virtualHost:
+    domains:
+    - 'lambda.example.com:81'
+    routes:
+    - matchers:
+      - prefix: /test/
+      routeAction:
+        single:
+          destinationSpec:
+            aws:
+              logicalName: QuarkusLambdaDdoyle
+              # logicalName: quarkus-lambda-app-QuarkusLambdaRestDdoyle-NTZDoZz6RBrS
+              wrapAsApiGateway: true
+              unwrapAsApiGateway: false
+          upstream:
+            name: my-aws-lambda-upstream
+            namespace: gloo-system
+      options:
+        # prefixRewrite: "/test"
+        # regexRewrite:
+        #   pattern:
+        #     regex: "^/test(.*)"
+        #   substitution: '\1'
+        stagedTransformations:
+          regular:
+            requestTransforms:
+            - requestTransformation:
+                transformationTemplate:
+                  extractors:
+                    lambdaPathExtractor:
+                      header: ':path'
+                      regex: '^\/test(.*)'
+                      subgroup: 1
+                  headers:
+                    :path:
+                      text: "{{ lambdaPathExtractor }}"
+        # ddoyle: This doesn't work, because we can't seem to set pseudo headers:
+        # * Route Error: ProcessingError. Reason: *headers.plugin: :-prefixed headers cannot be set: ':path'. Route Name: gloo-system_api-example-com-route-0-matcher-0; Route Error: ProcessingError. Reason: *headers.plugin: :-prefixed headers cannot be set: ':path'. Route Name: gloo-system_api-example-com-route-0-matcher-0
+        # headerManipulation:
+        #   responseHeadersToAdd:
+        #   - header:
+        #       key: ":path"
+        #       value: "/vertx/hello"
+    # options:
+      # Configures ExtAuth on our routes
+      # extauth:
+      #   configRef:
+      #     name: apikey-auth
+      #     namespace: gloo-system
+      # rateLimitConfigs:
+      #   refs:
+      #   - name: apikey-limit
+      #     namespace: gloo-system
+      # waf:
+      #   customInterventionMessage: 'ModSecurity intervention! Custom message details here..'
+      #   ruleSets:
+      #   - ruleStr: |
+      #       # Turn rule engine on
+      #       SecRuleEngine On
+      #       SecRule REQUEST_HEADERS:JMeter-Agent "scammer" "deny,status:418,id:107,phase:1,msg:'blocked scammer'" 

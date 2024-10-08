@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: portal-frontend
+  namespace: gloo-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-frontend
+  namespace: gloo-system
+  labels:
+    app: portal-frontend
+    service: portal-frontend
+spec:
+  ports:
+    - name: http
+      port: 4000
+      targetPort: 4000
+  selector:
+    app: portal-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-frontend
+  namespace: gloo-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-frontend
+  template:
+    metadata:
+      labels:
+        app: portal-frontend
+    spec:
+      serviceAccountName: portal-frontend
+      containers:
+        - image: gcr.io/solo-public/docs/portal-frontend:latest
+          # image: gcr.io/solo-public/docs/portal-frontend:latest
+          # image: gcr.io/solo-public/docs/portal-frontend:v0.0.19
+          imagePullPolicy: Always
+          name: portal-frontend
+          args: ["--host", "0.0.0.0"]
+          ports:
+            - containerPort: 4000
+          # env:
+          # # Auth0 config
+          # # curl https://dev-8wr0e3o2e0knm1oy.us.auth0.com/.well-known/openid-configuration | jq .
+          #   - name: VITE_PORTAL_SERVER_URL
+          #     value: http://developer.example.com/v1 # This is the URL of the Portal server we will expose as a Route.
+          #   - name: "VITE_CLIENT_ID"
+          #     value: "IoRnBY43KzXoboQ0C2pQZDve3T6qXXG0"
+          #   - name: "VITE_TOKEN_ENDPOINT"            
+          #     value: "https://dev-8wr0e3o2e0knm1oy.us.auth0.com/oauth/token"
+          #   - name: "VITE_AUTH_ENDPOINT"
+          #     value: "https://dev-8wr0e3o2e0knm1oy.us.auth0.com/authorize"
+          #   - name: "VITE_LOGOUT_ENDPOINT"
+          #     value: "https://dev-8wr0e3o2e0knm1oy.us.auth0.com/oidc/logout"
+          #   - name: "VITE_AUDIENCE"
+          #     value: "http://developer.example.com/"
+          env:
+            - name: VITE_PORTAL_SERVER_URL
+              value: http://developer.example.com/v1 # This is the URL of the Portal server we will expose as a Route.
+            - name: "VITE_CLIENT_ID"
+              value: "portal-client"
+            - name: "VITE_TOKEN_ENDPOINT"
+              value: "http://keycloak.example.com/realms/master/protocol/openid-connect/token"
+            - name: "VITE_AUTH_ENDPOINT"
+              value: "http://keycloak.example.com/realms/master/protocol/openid-connect/auth"
+            - name: "VITE_LOGOUT_ENDPOINT"
+              value: "http://keycloak.example.com/realms/master/protocol/openid-connect/logout"

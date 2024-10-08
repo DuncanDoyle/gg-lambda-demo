@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Quarkus Lambda",
+    "description": "Quarkus Lambda",
+    "version": "v1.0"
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "description": "Post /",
+        "operationId": "Post.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "greeting": {
+                      "type": "string"
+                    }
+                  }
+                }
+
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-amzn-requestid": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-amzn-remapped-content-length": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-amz-executed-version": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-amzn-trace-id": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-envoy-upstream-service-time": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+apiVersion: portal.gloo.solo.io/v1
+kind: Portal
+metadata:
+  name: portal
+  namespace: default
+spec:
+  visibility:
+    public: true
+  apiProducts:
+    - name: lambda
+      namespace: default
+  # portalBackendSelectors:
+  #   - selector:
+  #       namespace: gloo-system
+  #       labels:
+  #         app: gateway-portal-web-server
