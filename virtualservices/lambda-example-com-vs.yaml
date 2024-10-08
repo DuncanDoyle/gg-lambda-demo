@@ -12,13 +12,14 @@ spec:
     routes:
     - matchers:
       - prefix: /test/
+      # - prefix: /
       routeAction:
         single:
           destinationSpec:
             aws:
               logicalName: QuarkusLambdaDdoyle
               # logicalName: quarkus-lambda-app-QuarkusLambdaRestDdoyle-NTZDoZz6RBrS
-              wrapAsApiGateway: true
+              wrapAsApiGateway: false
               unwrapAsApiGateway: false
           upstream:
             name: my-aws-lambda-upstream
@@ -29,6 +30,8 @@ spec:
         #   pattern:
         #     regex: "^/test(.*)"
         #   substitution: '\1'
+
+        # ddoyle: Implement path prefix replacement using staged transformation.
         stagedTransformations:
           regular:
             requestTransforms:
@@ -49,20 +52,3 @@ spec:
         #   - header:
         #       key: ":path"
         #       value: "/vertx/hello"
-    # options:
-      # Configures ExtAuth on our routes
-      # extauth:
-      #   configRef:
-      #     name: apikey-auth
-      #     namespace: gloo-system
-      # rateLimitConfigs:
-      #   refs:
-      #   - name: apikey-limit
-      #     namespace: gloo-system
-      # waf:
-      #   customInterventionMessage: 'ModSecurity intervention! Custom message details here..'
-      #   ruleSets:
-      #   - ruleStr: |
-      #       # Turn rule engine on
-      #       SecRuleEngine On
-      #       SecRule REQUEST_HEADERS:JMeter-Agent "scammer" "deny,status:418,id:107,phase:1,msg:'blocked scammer'" 
