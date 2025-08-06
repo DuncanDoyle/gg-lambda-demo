@@ -14,8 +14,8 @@ spec:
   rules:
     - matches:  
       - path:
-          # type: PathPrefix
-          type: Exact
+          type: PathPrefix
+          # type: Exact
           value: /
       # filters:
       # - type: URLRewrite
@@ -23,12 +23,12 @@ spec:
       #     path:
       #       type: ReplacePrefixMatch
       #       replacePrefixMatch: /
-      filters:
-        - type: ExtensionRef
-          extensionRef:
-            group: gateway.solo.io
-            kind: RouteOption
-            name: api-cors
+      # filters:
+      #   - type: ExtensionRef
+      #     extensionRef:
+      #       group: gateway.solo.io
+      #       kind: RouteOption
+      #       name: api-cors
       backendRefs:
       # Delegate to another HTTPRoute
       - name: my-aws-lambda-upstream
@@ -40,6 +40,9 @@ spec:
           extensionRef:
             group: "gloo.solo.io"
             kind: Parameter
-            name: QuarkusLambdaDdoyle
+            # name: QuarkusLambdaDdoyle
+            # name: quarkus-lambda-429-test-QuarkusLambdaTest-Jf88L9aFqkAS
+            # name: quarkus-lambda-app-QuarkusLambdaRestDdoyle-NTZDoZz6RBrS
+            name: echo
        
       

@@ -2,6 +2,11 @@ gloo:
   kubeGateway:
     # Enable K8s Gateway integration
     enabled: true
+    gatewayParameters:
+      glooGateway:
+        serviceAccount:
+          extraAnnotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::931713665590:role/gloo-lambda-role
   gatewayProxies:
     gatewayProxy:
       # ddoyle: Not able to set this to "true" (i.e. disable the default proxy deployment), as that gives an error with the Helm templates ...
@@ -21,9 +26,9 @@ gloo:
           replicas: 1
       service:
         # Set this to different ports, so we can use port 80 on our K8S Gateway API proxy ....
-        httpPort: 80
+        httpPort: 81
         httpsFirst: true
-        httpsPort: 443
+        httpsPort: 444
         type: LoadBalancer
   gateway:
     persistProxySpec: true
@@ -55,11 +60,6 @@ gloo:
     namespaced: true
     nameSuffix: gg-demo
   settings:
-    # ddoyle: needed when using IAM roles for Service Accounts. Disable when using username and password
-    # aws:
-    #   enableServiceAccountCredentials: true
-    #   stsCredentialsRegion: eu-west-1
-
     # Expose the Control Plane Admin API (port 10010 on Gloo)
     devMode: true
 
@@ -72,7 +72,10 @@ gloo:
           rateLimit:
             requestsPerUnit: 10
             unit: MINUTE
-
+    aws:
+      enableServiceAccountCredentials: true
+      # stsCredentialsRegion: sts.amazonaws.com
+      stsCredentialsRegion: sts.eu-central-1.amazonaws.com
 
 observability:
   enabled: false

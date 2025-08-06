@@ -1,8 +1,9 @@
 #!/bin/sh
 
-GLOO_GATEWAY_VERSION="1.17.3"
+GLOO_GATEWAY_VERSION="1.18.16"
 
 export GLOO_GATEWAY_HELM_VALUES_FILE="gloo-gateway-helm-values.yaml"
+# export GLOO_GATEWAY_HELM_VALUES_FILE="gloo-gateway-helm-values-eks-sa.yaml"
 
 if [ -z "$GLOO_GATEWAY_LICENSE_KEY" ]
 then
@@ -26,7 +27,7 @@ pushd ../
 # create the ingress-gw namespace
 kubectl create namespace ingress-gw --dry-run=client -o yaml | kubectl apply -f -
 
-printf "\nDeploy the K8S Gateway API Gateway ...\n"
+# printf "\nDeploy the K8S Gateway API Gateway ...\n"
 kubectl apply -f gateways/gw.yaml
 
 #----------------------------------------- Deploy the Gloo Edge API Gateway -----------------------------------------

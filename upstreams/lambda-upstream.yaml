@@ -12,3 +12,4 @@ spec:
     # roleArn: arn:aws:iam::931713665590:role/GlooGatewayAwsLambdaUpstream
     destinationOverrides:
       unwrapAsApiGateway: false
+      wrapAsApiGateway: false
